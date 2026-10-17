@@ -1,0 +1,62 @@
+name: Bug report
+description: Something in the Home Assistant integration does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This repository is the **Home Assistant integration**. Problems with the gateway server
+        itself (USB connection, pump communication, wrong sensor values, heating control logic)
+        belong in [nibe-service-usb](https://github.com/tumik/nibe-service-usb/issues).
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2025.3.0"
+    validations:
+      required: true
+  - type: input
+    id: integration_version
+    attributes:
+      label: Integration version
+      description: From HACS or custom_components/nibe_service_usb/manifest.json.
+      placeholder: "0.2.0"
+    validations:
+      required: true
+  - type: input
+    id: gateway_version
+    attributes:
+      label: Gateway (nibe-service-usb) version
+      description: Shown by the "Gateway version" diagnostic sensor.
+    validations:
+      required: true
+  - type: input
+    id: pump_model
+    attributes:
+      label: Heat pump model and software version
+      placeholder: "F1226-6 R, 7994R7"
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: |
+        Settings, Devices & services, the integration, three-dot menu, Download diagnostics.
+        Drag the file here. The key is redacted; host, port and server id are included, so
+        check the file first.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Relevant lines from the Home Assistant log, ideally with
+        `custom_components.nibe_service_usb: debug`.
+      render: text

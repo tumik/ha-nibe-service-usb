@@ -1,0 +1,23 @@
+[project]
+name = "ha-nibe-service-usb"
+version = "0.2.0"
+description = "Home Assistant custom integration for the nibe-service-usb gateway"
+requires-python = ">=3.13"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC"]
+
+[tool.ruff.lint.per-file-ignores]
+# The protocol client exposes per-request timeouts on purpose (boost takes up to 20 s).
+"custom_components/nibe_service_usb/client.py" = ["ASYNC109"]
+# The discovery helpers take a timeout as part of their public signature (and tests mirror it).
+"custom_components/nibe_service_usb/discovery.py" = ["ASYNC109"]
+"tests/*.py" = ["ASYNC109"]

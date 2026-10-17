@@ -1,0 +1,97 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hassfest:
+    name: Hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hacs/action@main
+        with:
+          category: integration
+
+  tests:
+    name: Lint and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements_test.txt
+      - name: Install dependencies
+        run: pip install -r requirements_test.txt
+      - name: Ruff
+        run: ruff check custom_components tests
+      - name: Tests
+        run: python -m pytest -q tests
+
+  release:
+    name: Release
+    needs: [hassfest, hacs, tests]
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version (bump patch if the current one is already released)
+        id: version
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, pathlib, re, subprocess
+
+          manifest = pathlib.Path("custom_components/nibe_service_usb/manifest.json")
+          pyproject = pathlib.Path("pyproject.toml")
+          current = json.loads(manifest.read_text())["version"]
+          tags = subprocess.run(["git", "tag", "--list", "v*"], capture_output=True, text=True, check=True).stdout.split()
+          if f"v{current}" not in tags:
+              version, bumped = current, False
+          else:
+              major, minor, patch = (int(p) for p in current.split("."))
+              version, bumped = f"{major}.{minor}.{patch + 1}", True
+              manifest.write_text(re.sub(r'("version":\s*")[^"]*"', rf'\g<1>{version}"', manifest.read_text()))
+              pyproject.write_text(
+                  re.sub(r'(?m)^(version\s*=\s*")[^"]*"', rf'\g<1>{version}"', pyproject.read_text(), count=1)
+              )
+          print(f"version={version}")
+          print(f"bumped={'true' if bumped else 'false'}")
+          PY
+
+      - name: Commit, tag and release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+          BUMPED: ${{ steps.version.outputs.bumped }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$BUMPED" = "true" ]; then
+            git commit -am "Release $VERSION"
+            git push origin HEAD:main
+          fi
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
+          gh release create "v$VERSION" --title "v$VERSION" --generate-notes

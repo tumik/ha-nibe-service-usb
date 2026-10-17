@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Problem with the gateway server (USB, pump connection, sensors, heating control)
+    url: https://github.com/tumik/nibe-service-usb/issues
+    about: Issues with the nibe-service-usb gateway itself belong in the server repository.

@@ -1,0 +1,21 @@
+{
+  "domain": "nibe_service_usb",
+  "name": "Nibe service USB gateway",
+  "after_dependencies": [
+    "zeroconf"
+  ],
+  "codeowners": [
+    "@tumik"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/tumik/ha-nibe-service-usb",
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/tumik/ha-nibe-service-usb/issues",
+  "requirements": [],
+  "version": "0.2.0",
+  "zeroconf": [
+    "_nibe-usb._tcp.local."
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "config": {
+    "flow_title": "{name} ({host})",
+    "step": {
+      "user": {
+        "title": "Connect to the gateway",
+        "description": "Enter the address of the nibe-service-usb gateway and its pairing key.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "key": "Key"
+        },
+        "data_description": {
+          "host": "Host name or IP address of the machine running nibe-service-usb.",
+          "port": "TCP port of the gateway (default 9477).",
+          "key": "Printed by `nibe-service-usb show-key` on the gateway host: 64 hex characters or dash-grouped base32."
+        }
+      },
+      "zeroconf_confirm": {
+        "title": "Discovered Nibe gateway",
+        "description": "Enter the key for {name} at {host}:{port} to finish setting it up.",
+        "data": {
+          "key": "Key"
+        },
+        "data_description": {
+          "key": "Printed by `nibe-service-usb show-key` on the gateway host: 64 hex characters or dash-grouped base32."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate",
+        "description": "The key for the gateway at {host} was rejected. Enter the current key.",
+        "data": {
+          "key": "Key"
+        },
+        "data_description": {
+          "key": "Printed by `nibe-service-usb show-key` on the gateway host: 64 hex characters or dash-grouped base32."
+        }
+      },
+      "reconfigure": {
+        "title": "Change the gateway address",
+        "description": "Change where Home Assistant connects. The gateway at the new address must have the same server ID. Leave the key empty to keep the stored one.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "key": "Key"
+        },
+        "data_description": {
+          "host": "Host name or IP address of the machine running nibe-service-usb.",
+          "port": "TCP port of the gateway (default 9477).",
+          "key": "Optional. Leave empty to keep the current key."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the gateway.",
+      "invalid_auth": "The gateway rejected the key.",
+      "invalid_key": "The key is not valid: use 64 hex characters or dash-grouped base32.",
+      "unsupported_proto": "The gateway speaks an unsupported protocol version.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This gateway is already configured.",
+      "no_server_id": "The discovered gateway did not announce a server ID.",
+      "unsupported_proto": "The gateway speaks an unsupported protocol version.",
+      "server_id_mismatch": "The gateway at this address is a different one than the one originally configured.",
+      "reauth_successful": "Re-authentication was successful.",
+      "reconfigure_successful": "The gateway address was updated."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "product": {
+        "name": "Pump product"
+      },
+      "software_version": {
+        "name": "Pump software version"
+      },
+      "product_code": {
+        "name": "Pump product code"
+      },
+      "clock_state": {
+        "name": "Pump clock state",
+        "state": {
+          "unset": "Not set",
+          "ok": "OK",
+          "drifting": "Drifting"
+        }
+      },
+      "clock_drift": {
+        "name": "Pump clock drift"
+      },
+      "last_restart": {
+        "name": "Pump last restart"
+      },
+      "last_health_check": {
+        "name": "Pump last health check"
+      },
+      "gateway_version": {
+        "name": "Gateway version"
+      },
+      "gateway_uptime": {
+        "name": "Gateway uptime"
+      },
+      "clients": {
+        "name": "Connected clients"
+      },
+      "last_heartbeat": {
+        "name": "Last heartbeat"
+      },
+      "reverted_at": {
+        "name": "Watchdog reverted at"
+      },
+      "heating_target_dm": {
+        "name": "Heating target degree minutes (raw)"
+      },
+      "heating_current_dm": {
+        "name": "Heating current degree minutes (raw)"
+      }
+    },
+    "binary_sensor": {
+      "gateway_connected": {
+        "name": "Gateway connected"
+      },
+      "pump_online": {
+        "name": "Pump online"
+      },
+      "watchdog_alive": {
+        "name": "Watchdog alive"
+      },
+      "heating_request_active": {
+        "name": "Heating request active"
+      },
+      "eeprom_write_failed": {
+        "name": "EEPROM write failed"
+      },
+      "periodic_increase_running": {
+        "name": "Periodic hot water increase running"
+      }
+    },
+    "select": {
+      "hot_water_comfort": {
+        "name": "Hot water comfort",
+        "state": {
+          "eco": "Eco",
+          "normal": "Normal",
+          "lux": "Lux"
+        }
+      },
+      "heating_request": {
+        "name": "Heating request",
+        "state": {
+          "auto": "Automatic (pump decides)",
+          "enable": "Request heating (push degree minutes toward compressor start)",
+          "disable": "Suppress heating (reset degree minutes every 10 min; safety guards apply)"
+        }
+      }
+    },
+    "button": {
+      "hot_water_boost": {
+        "name": "Start periodic hot water increase"
+      },
+      "refresh": {
+        "name": "Refresh sensors"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Finding the gateway after an address change",
+        "description": "If the gateway stops answering at its stored address, Home Assistant looks for it by its server ID.",
+        "data": {
+          "relocate_mdns": "Search with mDNS"
+        },
+        "data_description": {
+          "relocate_mdns": "Look for the gateway's mDNS announcement (_nibe-usb._tcp) with the stored server ID."
+        }
+      }
+    }
+  }
+}

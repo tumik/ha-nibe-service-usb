@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest an improvement to the Home Assistant integration
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Features that need a new gateway command or sensor (for example forcing hot water at
+        maximum power) usually have to be added to
+        [nibe-service-usb](https://github.com/tumik/nibe-service-usb/issues) first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What do you want to do?
+      description: Describe the use case rather than the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested solution
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds you tried
