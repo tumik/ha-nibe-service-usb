@@ -121,18 +121,20 @@ added without a reload). Main ones:
 |---|---|
 | Temperatures | outdoor (BT1) and average outdoor, flow (BT2), return (BT3), hot water charge and top (BT6, BT7), brine in/out (BT10, BT11), condenser out (BT12), hot gas (BT14), liquid line (BT15), suction gas (BT17), calculated flow |
 | Heating control | degree minutes, operating priority, heat demand, electric addition power and step |
-| Compressor and pumps | compressor running / state / status / inhibit time, heat medium pump (GP1) and brine pump (GP2) speed, hot water valve position |
-| Hot water | effective hot water mode and reason, periodic increase running / remaining / hold / failed, temporary lux |
+| Compressor and pumps | compressor running / state / status / inhibit time, heat medium pump (GP1) and brine pump (GP2) speed and state, hot water valve position |
+| Hot water | effective hot water mode and reason, periodic increase running / remaining / hold / failed and days until the next one, temporary lux and its remaining time |
 | Alarms | "Alarm" (binary, problem) and "Active alarms" (state = count, attribute `alarms` = list of number and title), freeze protection |
-| Counters | compressor starts, compressor hours (total and hot water) |
-| Pump settings | disabled by default, diagnostic category (start compressor threshold, stop heating, curve, ...) |
+| Counters | compressor starts, compressor hours (total and hot water), additional heat time factor (total and hot water) |
+| Pump settings | disabled by default, diagnostic category (start compressor threshold, additional heat start and step difference, max diff for compressor and additional heat, stop heating, curve, heat medium pump speed in hot water, periodic increase start hour, ...) |
+| Pump identity | diagnostic category (country code, display language, PCA base version, EEPROM counters, ...) |
 
 ### Diagnostic entities
 
-Gateway connected, pump online, watchdog alive, EEPROM write failed, pump identity (product,
-software version, product code, clock state and drift, last restart and health check), gateway
-version and uptime, connected clients, last heartbeat, watchdog reverted at, and the heating
-request's target and current degree minutes (raw units).
+Gateway connected, pump online, pump port armed and last disarmed (the gateway disarms the pump
+console when idle so that a USB bus reset cannot hang it), watchdog alive, EEPROM write failed,
+pump identity (product, software version, product code, clock state and drift, last restart and
+health check), gateway version and uptime, connected clients, last heartbeat, watchdog reverted at,
+and the heating request's target and current degree minutes (raw units).
 
 Entities become unavailable while the gateway is unreachable. Sensors also become unavailable
 while the pump is offline or a value is empty.

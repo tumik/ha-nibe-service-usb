@@ -76,6 +76,9 @@ STATUS_BINARY_SENSORS: tuple[NibeStatusBinarySensorDescription, ...] = (
         device_class=BinarySensorDeviceClass.CONNECTIVITY,
         diagnostic=True,
     ),
+    # The gateway keeps the pump console port armed only while it talks to the pump, to avoid the
+    # console hang after a USB bus reset. Unknown with a gateway that does not report it.
+    NibeStatusBinarySensorDescription("pump_armed", ("pump", "armed"), diagnostic=True),
     NibeStatusBinarySensorDescription("watchdog_alive", ("watchdog", "ha_alive"), diagnostic=True),
     NibeStatusBinarySensorDescription(
         "heating_request_active", ("heating", "active"), attributes=_heating_attributes

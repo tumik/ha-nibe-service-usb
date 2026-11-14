@@ -8,6 +8,13 @@ merged changes, this file summarises the notable ones.
 
 ## [Unreleased]
 
+### Added
+
+- Diagnostic binary sensor **Pump port armed** and timestamp sensor **Pump port last disarmed**
+  from the gateway status (`pump.armed`, `pump.last_disarm`). The gateway disarms the pump
+  console when idle so that a USB bus reset cannot hang it; both stay unknown with a gateway
+  that does not report them.
+
 ## [0.2.0] - 2026-10-17
 
 Initial public release.

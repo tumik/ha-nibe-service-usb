@@ -155,6 +155,12 @@ STATUS_SENSORS: tuple[NibeStatusSensorDescription, ...] = (
         device_class=SensorDeviceClass.TIMESTAMP,
         transform=_timestamp,
     ),
+    NibeStatusSensorDescription(
+        "pump_last_disarm",
+        ("pump", "last_disarm"),
+        device_class=SensorDeviceClass.TIMESTAMP,
+        transform=_timestamp,
+    ),
     NibeStatusSensorDescription("gateway_version", ("version",), transform=_text),
     NibeStatusSensorDescription(
         "gateway_uptime",
