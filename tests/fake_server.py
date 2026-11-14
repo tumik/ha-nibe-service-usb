@@ -152,7 +152,14 @@ def default_status() -> dict[str, Any]:
     return {
         "version": "0.1.0",
         "uptime": 100000.0,
-        "pump": {"online": True, "port": "/dev/ttyUSB0", "last_ok": now, "errors": 0},
+        "pump": {
+            "online": True,
+            "port": "/dev/ttyUSB0",
+            "last_ok": now,
+            "errors": 0,
+            "armed": True,
+            "last_disarm": 1760000200.0,
+        },
         "heating": {
             "mode": "auto",
             "active": False,

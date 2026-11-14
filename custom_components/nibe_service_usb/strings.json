@@ -95,6 +95,9 @@
       "last_health_check": {
         "name": "Pump last health check"
       },
+      "pump_last_disarm": {
+        "name": "Pump port last disarmed"
+      },
       "gateway_version": {
         "name": "Gateway version"
       },
@@ -123,6 +126,9 @@
       },
       "pump_online": {
         "name": "Pump online"
+      },
+      "pump_armed": {
+        "name": "Pump port armed"
       },
       "watchdog_alive": {
         "name": "Watchdog alive"

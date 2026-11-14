@@ -167,6 +167,36 @@ async def test_status_sensors(hass: HomeAssistant, setup_integration: MockConfig
     assert datetime.fromisoformat(restart.state).timestamp() == pytest.approx(1760000000.0)
 
 
+async def test_pump_armed_status(
+    hass: HomeAssistant, fake_server: FakeServer, setup_integration: MockConfigEntry
+) -> None:
+    armed = state(hass, "binary_sensor", "status_pump_armed")
+    assert armed.state == "on"
+    registry = er.async_get(hass)
+    entry = registry.async_get(eid(hass, "binary_sensor", "status_pump_armed"))
+    assert entry is not None
+    assert entry.entity_category is er.EntityCategory.DIAGNOSTIC
+    disarm = state(hass, "sensor", "status_pump_last_disarm")
+    assert disarm.attributes["device_class"] == "timestamp"
+    assert datetime.fromisoformat(disarm.state).timestamp() == pytest.approx(1760000200.0)
+
+    await push_status(hass, fake_server, pump={"armed": False, "last_disarm": 1760000300.0})
+    assert state(hass, "binary_sensor", "status_pump_armed").state == "off"
+    disarm = state(hass, "sensor", "status_pump_last_disarm")
+    assert datetime.fromisoformat(disarm.state).timestamp() == pytest.approx(1760000300.0)
+
+
+async def test_pump_armed_missing_from_older_gateway(
+    hass: HomeAssistant, fake_server: FakeServer, setup_integration: MockConfigEntry
+) -> None:
+    # A dict section is merged by push_status, so replace "pump" through a non-dict value first.
+    pump = {k: v for k, v in fake_server.status["pump"].items() if k not in ("armed", "last_disarm")}
+    await push_status(hass, fake_server, pump=None)
+    await push_status(hass, fake_server, pump=pump)
+    assert state(hass, "binary_sensor", "status_pump_armed").state == "unknown"
+    assert state(hass, "sensor", "status_pump_last_disarm").state == "unknown"
+
+
 async def test_select_states(hass: HomeAssistant, setup_integration: MockConfigEntry) -> None:
     assert state(hass, "select", "hot_water_comfort").state == "normal"
     st = state(hass, "select", "heating_request")
